@@ -1,11 +1,21 @@
 $(function() {
-    var paper = Raphael(10, 50, 320, 200);
+    var paper = Raphael(10, 50, 800, 1000);
     var circle = paper.circle(150, 140, 100);
     circle.attr("fill", "#f00");
     circle.attr("stroke", "#fff");
-    circle.animate({
-        cx: 300,
-        cy: 100,
-        fill: "#0f0"
-    }, 1000);
+    function makeColor() {
+        var thing = "#";
+        for(var i = 0; i < 3; i++) {
+            thing += Math.floor(Math.random()*16).toString(16);
+        }
+        return thing;
+    }
+    function loop(e) {
+        circle.animate({
+            cx: e.pageX,
+            cy: e.pageY,
+            fill: makeColor()
+        }, 300);
+    }
+    $(document.body).on('mousemove', loop)
 });
