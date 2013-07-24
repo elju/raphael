@@ -2,13 +2,13 @@ $(function() {
     var SX = window.innerWidth; //screenX
     var SY = window.innerHeight; //screenY
     var paper = Raphael(0, 0, window.innerWidth, window.innerHeight);
-    var circle = paper.circle(50,50,20);
-    circle.attr({fill:"#000"});
-    this.CHANGEX = Math.floor(Math.random() * 60);
-    this.CHANGEY = Math.floor(Math.random() * 40);
+    var circle = paper.circle(50,50,30);
+    circle.attr({fill: makeColor(), "stroke-width": 0});
+    circle.CHANGEX = Math.floor(Math.random() * 80) + 1;
+    circle.CHANGEY = Math.floor(Math.random() * 80) + 1;
     var num;
     var intervals = [];
-    var circles = paper.set();
+    var circles = paper.set(circle);
     circles.update = function () {
         var dx = this.CHANGEX;
         var dy = this.CHANGEY;
@@ -18,22 +18,22 @@ $(function() {
         if (x + dx > SX) {
             X = SX - (dx - (SX - x)); // bounce off the wall in the x direction;
             this.CHANGEX = -this.CHANGEX;
-            this.animate({fill: makeColor()}, 1000);
+            this.animate({fill: makeColor()}, 200);
         } else if (x + dx < 0) {
             X = -dx - x;
             this.CHANGEX = -this.CHANGEX; // change to moving opposite x direction
-            this.animate({fill: makeColor()}, 1000);
+            this.animate({fill: makeColor()}, 200);
         } else {
             X = x + dx;
         }
         if (y + dy > SY) {
             Y = SY - (dy - (SY - y)); // bounce off the wall in the x direction;
             this.CHANGEY = -this.CHANGEY;
-            this.animate({fill: makeColor()}, 1000);
+            this.animate({fill: makeColor()}, 200);
         } else if (y + dy < 0) {
             Y = -dy - y;
             this.CHANGEY = -this.CHANGEY; // change to moving opposite y direction;
-            this.animate({fill: makeColor()}, 1000);
+            this.animate({fill: makeColor()}, 200);
         } else {
             Y = y + dy;
         }
@@ -42,7 +42,7 @@ $(function() {
     var path = paper.path("M50,50L450,50").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
     var path2 = paper.path("M50,50L450,50").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
     var dragger = paper.circle(90,50,12).attr({stroke:"#000",fill:"#ccc"});
-    var texty = paper.text(200,50,"4").attr({unselectable: "on"});
+    var texty = paper.text(90,50,"1").attr({unselectable: "on"});
 
     function up() {
         this.dx = this.dy = 0;
