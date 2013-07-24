@@ -39,10 +39,10 @@ $(function() {
         }
         this.animate({cx: X, cy: Y}, 100);
     };
-    var path = paper.path("M50,50L450,50").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
-    var path2 = paper.path("M50,50L450,50").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
-    var dragger = paper.circle(90,50,12).attr({stroke:"#000",fill:"#ccc"});
-    var texty = paper.text(90,50,"1").attr({unselectable: "on"});
+    var path = paper.path("M50,50L710,50").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
+    var path2 = paper.path("M50,50L710,50").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
+    var dragger = paper.circle(70,50,12).attr({stroke:"#000",fill:"#ccc"});
+    var texty = paper.text(70,50,"1").attr({unselectable: "on"});
 
     function up() {
         this.dx = this.dy = 0;
@@ -53,12 +53,12 @@ $(function() {
     // This is recorded on the variable "num"
     dragger.update = function (x, y) {
         temp = this.attr("cx") + x;
-        temp = temp > 70 ? temp : 70;
-        temp = temp < 430 ? temp : 430;
+        temp = temp > 60 ? temp : 60;
+        temp = temp < 700 ? temp : 700;
         var X = temp;
         var tempCircle;
         this.attr({cx: X});
-        var tempNum = Math.floor(X / 50);
+        var tempNum = Math.floor((X - 50)/ 20);
         num = num || 1;
         if (tempNum !== num) {
             if (tempNum > num) {
@@ -98,5 +98,19 @@ $(function() {
         }
         return thing;
     }
+
+    // add a button to click on
+    var link = paper.text(SX - 100, 50, "see the code!");
+    link.attr({fill: "#000", 'font-size': '20pt'});
+    loadCode = function(e) {
+        window.open("https://github.com/elju/Raphael-Example/blob/master/example.js", "_self");
+    };
+    link.click(loadCode);
+    link.hover(function(e) {
+        this.attr({fill: "#999"});
+    });
+    link.mouseout(function(e) {
+        this.attr({fill: "#000"});
+    });
 
 });
