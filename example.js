@@ -2,14 +2,20 @@ $(function() {
     var SX = window.innerWidth; //screenX
     var SY = window.innerHeight; //screenY
     var paper = Raphael(0, 0, SX, SY);
+
+    // add our first circle moving at a random speed
     var circle = paper.circle(50,50,15);
     circle.attr({fill: makeColor(), "stroke-width": 0});
     circle.CHANGEX = Math.floor(Math.random() * 80) + 1;
     circle.CHANGEY = Math.floor(Math.random() * 80) + 1;
+
+    // initalize everything we'll need...
     var num;
     var intervals = [];
     var circles = paper.set();
-    var num2 = 15;
+
+    // starting radius size
+    var radius = 15;
     circles.push(circle);
     circles.update = function () {
         var dx = this.CHANGEX;
@@ -80,7 +86,7 @@ $(function() {
             if (tempNum > num) {
                 diff = tempNum - num;
                 for (var i = 0; i < diff; i++) {
-                    tempCircle = paper.circle(Math.floor(Math.random() * SX), Math.floor(Math.random() * SY), num2).attr({fill:"#0F0"});
+                    tempCircle = paper.circle(Math.floor(Math.random() * SX), Math.floor(Math.random() * SY), radius).attr({fill:"#0F0"});
                     tempCircle.CHANGEX = Math.floor(Math.random() * 80) + 1;
                     tempCircle.CHANGEY = Math.floor(Math.random() * 80) + 1;
                     tempCircle.attr({"stroke-width": 0}).toBack();
@@ -112,17 +118,17 @@ $(function() {
         var tempCircle, diff;
         this.attr({cx: X});
         var tempNum2 = (Math.floor((X - 50)/ 100) + 1) * 15;
-        if (num2 === undefined)  // doing an ||= annoyingly won't work right here.
-            num2 = 15;
-        if (tempNum2 !== num2) {
+        if (radius === undefined)  // doing an ||= annoyingly won't work right here.
+            radius = 15;
+        if (tempNum2 !== radius) {
             var _len = circles.length
             for (var j = 0; j < _len; j++) {
                 circles[j].attr({r: tempNum2});
             }
-            num2 = tempNum2;
-            console.log(num2);
+            radius = tempNum2;
+            console.log(radius);
         }
-        texty2.attr({x:X,y:100,text:num2});
+        texty2.attr({x:X,y:100,text:radius});
     };
 
     // this code is borrowed from a Raphael example, and appears to behave how you'd expect
