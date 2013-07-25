@@ -1,7 +1,7 @@
 $(function() {
     var SX = window.innerWidth; //screenX
     var SY = window.innerHeight; //screenY
-    var paper = Raphael(0, 0, window.innerWidth, window.innerHeight);
+    var paper = Raphael(0, 0, SX, SY);
     var circle = paper.circle(50,50,15);
     circle.attr({fill: makeColor(), "stroke-width": 0});
     circle.CHANGEX = Math.floor(Math.random() * 80) + 1;
