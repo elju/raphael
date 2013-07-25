@@ -127,7 +127,7 @@ $(function() {
 
     // this code is borrowed from a Raphael example, and appears to behave how you'd expect
     // but with a slightly more sophisticated way of keeping track of change.
-    // Since the dx and dy are passed as total change since the mousedown, we have to keep track
+    // Since the dx and dy are passed as total change after the mousedown, we have to keep track
     // of how much specifically has changed since the last call of update.
     function move(dx, dy) {
         this.update(dx - (this.dx || 0), dy - (this.dy || 0));
