@@ -2,13 +2,15 @@ $(function() {
     var SX = window.innerWidth; //screenX
     var SY = window.innerHeight; //screenY
     var paper = Raphael(0, 0, window.innerWidth, window.innerHeight);
-    var circle = paper.circle(50,50,30);
+    var circle = paper.circle(50,50,15);
     circle.attr({fill: makeColor(), "stroke-width": 0});
     circle.CHANGEX = Math.floor(Math.random() * 80) + 1;
     circle.CHANGEY = Math.floor(Math.random() * 80) + 1;
     var num;
     var intervals = [];
-    var circles = paper.set(circle);
+    var circles = paper.set();
+    var num2 = 15;
+    circles.push(circle);
     circles.update = function () {
         var dx = this.CHANGEX;
         var dy = this.CHANGEY;
@@ -39,42 +41,88 @@ $(function() {
         }
         this.animate({cx: X, cy: Y}, 100);
     };
+
+    // this is the first slider
     var path = paper.path("M50,50L710,50").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
     var path2 = paper.path("M50,50L710,50").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
+
+    // this is the second slider
+    var path3 = paper.path("M50,100L710,100").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
+    var path4 = paper.path("M50,100L710,100").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
+
     var dragger = paper.circle(70,50,12).attr({stroke:"#000",fill:"#ccc"});
+
+    var dragger2 = paper.circle(70,100,12).attr({stroke:"#000",fill:"#ccc"});
     var texty = paper.text(70,50,"1").attr({unselectable: "on"});
+    var texty2 = paper.text(70,100,"15").attr({unselectable: "on"});
 
     function up() {
         this.dx = this.dy = 0;
     }
 
+    // now that we have the rest of the draggers set up, we need to push the original circle to the back.
+    circle.toBack();
+
     // this is the code to move the dragger around
     // and then keep track of the number of circles we should have on the screen
     // This is recorded on the variable "num"
     dragger.update = function (x, y) {
-        temp = this.attr("cx") + x;
+        var temp = this.attr("cx") + x;
         temp = temp > 60 ? temp : 60;
         temp = temp < 700 ? temp : 700;
         var X = temp;
-        var tempCircle;
+        var tempCircle, diff;
         this.attr({cx: X});
         var tempNum = Math.floor((X - 50)/ 20);
-        num = num || 1;
+        if (num === undefined)  // doing an ||= annoyingly won't work right here.
+            num = 1;
         if (tempNum !== num) {
             if (tempNum > num) {
-                tempCircle = paper.circle(Math.floor(Math.random() * SX), Math.floor(Math.random() * SY), 30).attr({fill:"#0F0"});
-                tempCircle.CHANGEX = Math.floor(Math.random() * 80) + 1;
-                tempCircle.CHANGEY = Math.floor(Math.random() * 80) + 1;
-                tempCircle.attr({"stroke-width": 0});
-                circles.push(tempCircle);
-                intervals.push(window.setInterval(circles.update.bind(tempCircle), 100));
+                diff = tempNum - num;
+                for (var i = 0; i < diff; i++) {
+                    tempCircle = paper.circle(Math.floor(Math.random() * SX), Math.floor(Math.random() * SY), num2).attr({fill:"#0F0"});
+                    tempCircle.CHANGEX = Math.floor(Math.random() * 80) + 1;
+                    tempCircle.CHANGEY = Math.floor(Math.random() * 80) + 1;
+                    tempCircle.attr({"stroke-width": 0}).toBack();
+                    circles.push(tempCircle);
+                    intervals.push(window.setInterval(circles.update.bind(tempCircle), 100));
+                }
+                diff = 0;
             } else {
-                circles.pop().remove();
-                window.clearInterval(intervals.pop());
+                diff = num - tempNum;
+                console.log('this is diff');
+                console.log(diff);
+                for (i = 0; i < diff; i++) {
+                    circles.pop().remove();
+                    window.clearInterval(intervals.pop());
+                }
+                diff = 0;
             }
+            num = tempNum;
+            console.log(num);
         }
-        num = tempNum;
         texty.attr({x:X,y:50,text:num});
+    };
+
+    dragger2.update = function (x, y) {
+        var temp = this.attr("cx") + x;
+        temp = temp > 60 ? temp : 60;
+        temp = temp < 700 ? temp : 700;
+        var X = temp;
+        var tempCircle, diff;
+        this.attr({cx: X});
+        var tempNum2 = (Math.floor((X - 50)/ 100) + 1) * 15;
+        if (num2 === undefined)  // doing an ||= annoyingly won't work right here.
+            num2 = 15;
+        if (tempNum2 !== num2) {
+            var _len = circles.length
+            for (var j = 0; j < _len; j++) {
+                circles[j].attr({r: tempNum2});
+            }
+            num2 = tempNum2;
+            console.log(num2);
+        }
+        texty2.attr({x:X,y:100,text:num2});
     };
 
     // this code is borrowed from a Raphael example, and appears to behave how you'd expect
@@ -87,7 +135,9 @@ $(function() {
         this.dy = dy;
     }
     dragger.drag(move, up);
+    dragger2.drag(move, up);
     texty.drag(move.bind(dragger), up.bind(dragger));
+    texty2.drag(move.bind(dragger2), up.bind(dragger2));
 
     intervals.push(window.setInterval(circles.update.bind(circle), 100));
 
@@ -100,17 +150,17 @@ $(function() {
     }
 
     // add a button to click on
-    var link = paper.text(SX - 100, 50, "see the code!");
+    var link = paper.text(SX - 100, SY - 50, "see the code!");
     link.attr({fill: "#000", 'font-size': '20pt'});
     loadCode = function(e) {
         window.open("https://github.com/elju/Raphael-Example/blob/gh-pages/example.js", "_self");
     };
     link.click(loadCode);
     link.hover(function(e) {
-        this.attr({fill: "#999"});
+        this.attr({fill: "#E00", "font-size": "22pt"});
     });
     link.mouseout(function(e) {
-        this.attr({fill: "#000"});
+        this.attr({fill: "#000", "font-size": "20pt"});
     });
 
 });
