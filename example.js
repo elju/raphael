@@ -148,7 +148,7 @@ $(function() {
     var link = paper.text(SX - 100, SY - 50, "see the code!");
     link.attr({fill: "#000", 'font-size': '20pt'});
     loadCode = function(e) {
-        window.open("https://github.com/elju/Raphael-Example/blob/gh-pages/example.js", "_self");
+        window.open("https://github.com/elju/raphael/blob/gh-pages/example.js", "_self");
     };
     link.click(loadCode);
     link.hover(function(e) {
