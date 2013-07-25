@@ -46,22 +46,22 @@ $(function() {
     var path = paper.path("M50,50L710,50").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
     var path2 = paper.path("M50,50L710,50").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
 
+    // this dragger controls the number of circles (in the first slider)
+    var dragger = paper.circle(70,50,12).attr({stroke:"#000",fill:"#ccc"});
+    var texty = paper.text(70,50,"1").attr({unselectable: "on"});
+
     // this is the second slider
     var path3 = paper.path("M50,100L710,100").attr({"stroke-width": 8, stroke: "#000", "stroke-linecap": "round"});
     var path4 = paper.path("M50,100L710,100").attr({"stroke-width": 6, stroke: "#fff", "stroke-linecap": "round"});
 
-    var dragger = paper.circle(70,50,12).attr({stroke:"#000",fill:"#ccc"});
-
+    // this dragger controls the radius of the circles (in the second slider)
     var dragger2 = paper.circle(70,100,12).attr({stroke:"#000",fill:"#ccc"});
-    var texty = paper.text(70,50,"1").attr({unselectable: "on"});
     var texty2 = paper.text(70,100,"15").attr({unselectable: "on"});
 
+    // this function handles mouse up after dragging dragger
     function up() {
         this.dx = this.dy = 0;
     }
-
-    // now that we have the rest of the draggers set up, we need to push the original circle to the back.
-    circle.toBack();
 
     // this is the code to move the dragger around
     // and then keep track of the number of circles we should have on the screen
@@ -139,17 +139,12 @@ $(function() {
     texty.drag(move.bind(dragger), up.bind(dragger));
     texty2.drag(move.bind(dragger2), up.bind(dragger2));
 
-    intervals.push(window.setInterval(circles.update.bind(circle), 100));
+    // now that we have the rest of the draggers set up, we need to push the original circle to the back and animate it.
+    circle.toBack();
+    intervals.push(window.setInterval(circles.update.bind(circle), 100)); //<-- this is the animation step
 
-    function makeColor() {
-        var thing = "#";
-        for(var i = 0; i < 3; i++) {
-            thing += Math.floor(Math.random()*16).toString(16);
-        }
-        return thing;
-    }
 
-    // add a button to click on
+    // Now we add a button to view THIS source code
     var link = paper.text(SX - 100, SY - 50, "see the code!");
     link.attr({fill: "#000", 'font-size': '20pt'});
     loadCode = function(e) {
@@ -162,5 +157,15 @@ $(function() {
     link.mouseout(function(e) {
         this.attr({fill: "#000", "font-size": "20pt"});
     });
+
+
+    // Finally, here is a random helper function to return a random hex-valued color
+    function makeColor() {
+        var thing = "#";
+        for(var i = 0; i < 3; i++) {
+            thing += Math.floor(Math.random()*16).toString(16);
+        }
+        return thing;
+    }
 
 });
